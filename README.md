@@ -15,6 +15,21 @@
 - DeepSeek API密钥（获取地址：https://platform.deepseek.com/）
 - 云服务器/本地环境（云服务器推荐autodl，已适配路径）
 
+### 模型准备（关键！离线环境必看）
+本项目已将核心模型预下载到本地缓存，无需在线下载：
+1. **说话人分离模型**：`models--pyannote--speaker-diarization-3.1` `models--pyannote--segmentation-3.0` `models--pyannote--wespeaker-voxceleb-resnet34-LM`
+   - 本地缓存路径：`/root/autodl-tmp/huggingface/hub/`  
+   - 已启用 `HF_HUB_OFFLINE=1` 强制离线模式，无需联网验证
+2. **语义模型**：`all-MiniLM-L6-v2`  
+   - 云服务器路径：`/root/autodl-tmp/all-MiniLM-L6-v2`  
+   - 本地路径：`./models/all-MiniLM-L6-v2`（需手动下载放到该目录）
+3. **Whisper模型**：首次运行会自动下载到 `HF_CACHE_DIR` 配置的缓存目录（默认 `/root/autodl-tmp/`）
+
+⚠️ 注意：若模型加载失败，请检查：
+- 缓存目录是否存在对应模型文件
+- `config.py` 中 `HF_CACHE_DIR`/`SEMANTIC_MODEL_PATH` 配置是否正确
+- 已设置 `HF_HUB_OFFLINE=1`，禁止修改该环境变量
+  
 ### 步骤1：克隆仓库
 ```bash
 git clone https://github.com/你的GitHub用户名/NEU-Conflict-Detection-System.git
@@ -84,16 +99,20 @@ python main.py
 | GENERATION_ACCURACY_THRESHOLD | 生成准确性阈值 | 0.6 |
 | MIN_CLUSTER_SIZE | 最小聚类大小 | 2 |
 
-### 注意事项
-1. 模型下载：首次运行会自动下载 Whisper/Pyannote/ 语义模型，约需 2-5GB 存储空间，网络较慢时请耐心等待。
- 
-2. 密钥安全：不要将真实的 DEEPSEEK_API_KEY 提交到 GitHub，保持 config.py 中的占位符。
-
-3. 离线模式：代码默认启用 HF 离线模式，需确保模型已下载到缓存目录。
+## 注意事项
+1. 模型下载：**说话人分离/语义模型已预下载到本地**，仅Whisper模型首次运行自动下载（约2-5GB），网络较慢时请耐心等待。
    
-4. 音频格式：优先使用 WAV 格式，MP3 格式需自行转换（可使用 librosa 转换）。
+2. 密钥安全：不要将真实的 `DEEPSEEK_API_KEY` 提交到 GitHub，保持 `config.py` 中的占位符。
+   
+3. 离线模式：代码默认启用 HF 离线模式，需确保模型已下载到缓存目录（`/root/autodl-tmp/huggingface/hub/`）。
+   
+4. 音频格式：优先使用 WAV 格式，MP3 格式需自行转换（可使用 `librosa` 转换）。
    
 5. 性能优化：处理长音频（>10 分钟）时，建议使用 GPU，CPU 处理时间会显著增加。
+    
+6. 模型加载失败排查：
+   - 检查 `config.py` 中 `SEMANTIC_MODEL_PATH` 是否指向正确的本地模型路径；
+   - 确认 `pyannote/speaker-diarization-3.1` 等已放到 `/root/autodl-tmp/huggingface/hub/` 目录。
    
 ### 项目结构
 ```plaintext
