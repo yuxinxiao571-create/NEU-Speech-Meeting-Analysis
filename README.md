@@ -98,6 +98,9 @@ python main.py
 | SEMANTIC_MODEL_PATH | 语义模型路径 | 云服务器：/root/autodl-tmp/all-MiniLM-L6-v2；本地：./models/all-MiniLM-L6-v2 |
 | GENERATION_ACCURACY_THRESHOLD | 生成准确性阈值 | 0.6 |
 | MIN_CLUSTER_SIZE | 最小聚类大小 | 2 |
+| `HF_CACHE_DIR` | 模型缓存根目录 | /root/autodl-tmp/ |
+| `HF_ENDPOINT` | HF 镜像源（解决下载问题） | https://hf-mirror.com |
+| `HF_HUB_OFFLINE` | 强制离线模式 | 1（启用） |
 
 ## 注意事项
 1. 模型下载：**说话人分离/语义模型已预下载到本地**，仅Whisper模型首次运行自动下载（约2-5GB），网络较慢时请耐心等待。
